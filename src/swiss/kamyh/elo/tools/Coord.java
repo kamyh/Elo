@@ -40,11 +40,9 @@ public class Coord {
     }
 
     private int[] calculateCoordinates(int slot) {
-        //system.out.println("Calculating by slot: " + slot);
         int slotx = (slot % 9) + 1;
         int sloty = (slot / 9) + 1;
 
-        //system.out.println("RETURN: " + (slotx++) + ", " + (sloty++));
         return new int[]{slotx, sloty};
     }
 

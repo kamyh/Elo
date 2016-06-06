@@ -140,6 +140,9 @@ public class Menu {
 
     public void addPrevIcon(int x, int y) {
         ItemStack itemStack = new ItemStack(Material.IRON_DOOR);
+        ItemMeta itemMeta = itemStack.getItemMeta();
+        itemMeta.setDisplayName("Retour");
+        itemStack.setItemMeta(itemMeta);
         Item item = new Item(itemStack);
 
         item.setActionListener(new IAction() {
@@ -155,12 +158,15 @@ public class Menu {
         this.setMenuObjectAt(coordinates, item);
     }
 
-    private void display(Player player) {
+    public void display(Player player) {
         Elo.getInstance().getQueue().getCurrent().openForPlayer(player);
     }
 
     public void addLeaveIcon(int x, int y) {
         ItemStack itemStack = new ItemStack(Material.BARRIER);
+        ItemMeta itemMeta = itemStack.getItemMeta();
+        itemMeta.setDisplayName("Quitter");
+        itemStack.setItemMeta(itemMeta);
         Item item = new Item(itemStack);
 
         item.setActionListener(new IAction() {
