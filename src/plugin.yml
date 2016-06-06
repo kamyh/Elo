@@ -1,0 +1,11 @@
+name: elo
+version: 0.1
+author: kamyh
+main: swiss.kamyh.elo.Elo
+commands:
+  party:
+      description: Invitation to a party
+      usage: /party
+  menu:
+      description: menu
+      usage: /menu
