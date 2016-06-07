@@ -4,7 +4,6 @@ import org.bukkit.*;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import swiss.kamyh.elo.Elo;
@@ -23,10 +22,10 @@ import java.util.*;
  */
 public class Arena {
 
-    private ScoreboardInventory scoreBoard;
+    private ScoreboardArena scoreBoard;
     HashMap<org.bukkit.Material, ItemArmor> items;
     List<List<Player>> participants;
-    private ScoreboardInventory scoreboardInventory;
+    private ScoreboardArena scoreboardArena;
 
     public Arena(List<List<Player>> participants) {
 
@@ -62,7 +61,7 @@ public class Arena {
             player.getInventory().clear();
             player.setWalkSpeed(0);
 
-            player.teleport(new Location(Bukkit.getServer().getWorld("world"),30,5,5));
+            player.teleport(new Location(Bukkit.getServer().getWorld("world"),10,5,5));
         }
 
         for (Player player : this.participants.get(1)) {
@@ -70,15 +69,14 @@ public class Arena {
             player.getInventory().clear();
             player.setWalkSpeed(0);
 
-            player.teleport(new Location(Bukkit.getServer().getWorld("world"),-30,5,5));
+            player.teleport(new Location(Bukkit.getServer().getWorld("world"),-10,5,5));
         }
     }
 
     private void createScorebord() {
-        this.scoreboardInventory = new ScoreboardInventory(this, (ArrayList<Player>) ListTools.flatten(this.participants));
-        this.scoreboardInventory.init();
+        this.scoreboardArena = new ScoreboardArena(this, (ArrayList<Player>) ListTools.flatten(this.participants));
+        this.scoreboardArena.init();
     }
-
 
     private void armorSelection() {
         Menu menu = new Menu(Bukkit.createInventory(Elo.getInstance().getQueue().getCurrent().getInventory().getHolder(), 54, "Armor"));
@@ -192,7 +190,7 @@ public class Arena {
                 if (clickType == ClickType.LEFT) {
                     //validate choice
                     System.out.println("VALIDATION");
-                    scoreboardInventory.stopSelectionPhase();
+                    scoreboardArena.stopSelectionPhase();
                 }
             }
         });

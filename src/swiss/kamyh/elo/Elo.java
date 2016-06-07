@@ -3,10 +3,16 @@ package swiss.kamyh.elo;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
+import swiss.kamyh.elo.arena.Party;
 import swiss.kamyh.elo.listeners.MenuListener;
 import swiss.kamyh.elo.listeners.MenuOver;
 import swiss.kamyh.elo.tools.MenuQueue;
+
+import java.util.List;
+import java.util.PriorityQueue;
+import java.util.Queue;
 
 /**
  * Created by Vincent on 05.06.2016.
@@ -28,7 +34,6 @@ public class Elo extends JavaPlugin{
     public void onEnable(){
         Bukkit.getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
 
-
         this.instance = this;
         queue = new MenuQueue();
         this.instance.getServer().getPluginManager().registerEvents(new MenuListener(), this);
@@ -38,7 +43,7 @@ public class Elo extends JavaPlugin{
         this.party = new Party();
         this.getCommand("party").setExecutor(new Elo());
 
-        Bukkit.getConsoleSender().sendMessage("Initializing ");
+        Bukkit.getConsoleSender().sendMessage("Initializing");
     }
 
     @Override

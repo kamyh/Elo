@@ -1,4 +1,4 @@
-package swiss.kamyh.elo;
+package swiss.kamyh.elo.arena;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -11,6 +11,7 @@ import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.command.CommandSender;
 import org.bukkit.inventory.meta.SkullMeta;
+import swiss.kamyh.elo.Elo;
 import swiss.kamyh.elo.arena.Arena;
 import swiss.kamyh.elo.gui.Item;
 import swiss.kamyh.elo.gui.Menu;
@@ -47,64 +48,18 @@ public class Party {
      * private Methods
      */
 
-    /*private void buildHeadsMenu(Menu menu, int page) {
-        //TODO add next  + prev icon
-        menu.getInventory().clear();
 
-        int pNumber = Math.min(this.players.size(), 36);
-        System.out.println(pNumber);
-
-        for (int i = 1; i < pNumber + 1; i++) {
-            //this.addSkullToMenu(menu, this.players.get((page + 1) * i));
-            this.addSkullToMenu(menu, this.sender, i);
-        }
-    }
-
-    private void addSkullToMenu(Menu menu, Player teamMate, int index) {
-        ItemStack skull = new ItemStack(Material.SKULL_ITEM, 1, (short) 3);
-        SkullMeta player = (SkullMeta) skull.getItemMeta();
-        player.setOwner(teamMate.getName());
-        player.setDisplayName(ChatColor.GREEN + teamMate.getName());
-        skull.setItemMeta(player);
-        Item item = new Item(skull);
-
-        item.setActionListener(new IAction() {
-            public void onClick(ClickType clickType, Item menuObject, Player player) {
-                if (clickType == ClickType.LEFT) {
-                    if (Party.this.team.size() < 3) {
-                        Party.this.team.add(teamMate);
-                    } else {
-                        Party.this.sender.sendMessage("Too much Teammates!");
-                    }
-                }
-            }
-        });
-
-        //TODO methods to place head
-        Coord coordinates = new Coord(menu, index, 1);
-        menu.setMenuObjectAt(coordinates, item);
-    }
-
-    private void buildHeadsMenu(Menu menu) {
-        this.players = PlayerTools.getFake();
-        System.out.println(this.players.size());
-        this.team = new ArrayList<>();
-        this.buildHeadsMenu(menu, 0);
-    }*/
-
-
-
-    private void addTeamMateSelectionIcon(Player sender, String[] teamates) {
+    private void addTeamMateSelectionIcon(Player sender, List<Player> teamates, int fromX, int fromY) {
         //TODO test if valid player
         int index = 0;
 
-        for (String player_name : teamates) {
+        for (Player player : teamates) {
 
             ItemStack skull = new ItemStack(Material.SKULL_ITEM, 1, (short) 3);
-            SkullMeta player = (SkullMeta) skull.getItemMeta();
-            player.setOwner(player_name);
-            player.setDisplayName(ChatColor.GREEN + player_name);
-            skull.setItemMeta(player);
+            SkullMeta playerSkull = (SkullMeta) skull.getItemMeta();
+            playerSkull.setOwner(player.getName());
+            playerSkull.setDisplayName(ChatColor.GREEN + player.getName());
+            skull.setItemMeta(playerSkull);
             Item item = new Item(skull);
 
             item.setActionListener(new IAction() {
@@ -115,7 +70,7 @@ public class Party {
                 }
             });
 
-            Coord coordinates = new Coord(Elo.getInstance().getQueue().getCurrent(), 4 + index, 2);
+            Coord coordinates = new Coord(Elo.getInstance().getQueue().getCurrent(), fromX + index, fromY);
             Elo.getInstance().getQueue().getCurrent().setMenuObjectAt(coordinates, item);
 
             index++;
@@ -130,13 +85,30 @@ public class Party {
         List<List<Player>> participants = new ArrayList<>();
         participants.add(new ArrayList<Player>());
         participants.add(new ArrayList<Player>());
-        for(String playerName:args)
+
+        //TODO test if first ars is int
+        //TODO test if versus < 5
+        int versus = Integer.parseInt(args[0]);
+
+        /*code for n*/
+        /*for(String playerName:args)
         {
             Player player = Bukkit.getPlayer(playerName);
             participants.get(0).add(player);
+        }*/
+
+        for (int i = 1; i < versus + 1; i++) {
+            //TODO test player validity
+            Player player = Bukkit.getPlayer(args[i]);
+            participants.get(0).add(player);
         }
 
-        //TODO match making
+        for (int i = versus + 1; i < versus * 2 +1; i++) {
+            //TODO test player validity
+            Player player = Bukkit.getPlayer(args[i]);
+            participants.get(1).add(player);
+        }
+
 
         if ((sender instanceof Player) && cmd.getName().compareTo("menu") == 0) {
             this.sender = (Player) sender;
@@ -145,10 +117,16 @@ public class Party {
 
             Menu menu = new Menu(Bukkit.createInventory(this.sender, 54, "Elo"));
 
-            menu.addLeaveIcon(9, 6);
-            addTeamMateSelectionIcon(this.sender, args);
 
-            Item item = menu.addIcon(5,3,Material.FENCE_GATE);
+            System.out.println("Team 1:" + participants.get(0).size());
+            System.out.println("Team 2:" + participants.get(1).size());
+
+            menu.addLeaveIcon(9, 6);
+            addTeamMateSelectionIcon(this.sender, participants.get(0), 5 - (int) Math.floor(versus / 2.), 2);
+            addTeamMateSelectionIcon(this.sender, participants.get(1), 5 - (int) Math.floor(versus / 2.), 4);
+
+            //TODO match making instead
+            Item item = menu.addIcon(5, 3, Material.FENCE_GATE);
             item.setActionListener(new IAction() {
                 @Override
                 public void onClick(ClickType clickType, Item item, Player whoClicked) {

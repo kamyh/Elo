@@ -13,7 +13,7 @@ import java.util.ArrayList;
 /**
  * Created by Vincent on 07.06.2016.
  */
-public class ScoreboardInventory {
+public class ScoreboardArena {
     int time = 30;
 
     private ScoreboardManager sbManager;
@@ -21,11 +21,12 @@ public class ScoreboardInventory {
     private Objective obj;
 
     private Score s0;
+    private Score s1;
     private int finalId;
     private Arena parent;
     private ArrayList<Player> players;
 
-    public ScoreboardInventory(Arena parent, ArrayList<Player> players)
+    public ScoreboardArena(Arena parent, ArrayList<Player> players)
     {
         this.parent = parent;
         this.players = players;
@@ -39,7 +40,7 @@ public class ScoreboardInventory {
         obj = scoreBoard.registerNewObjective("ScoreBoard", "dummy");
 
         obj.setDisplaySlot(DisplaySlot.SIDEBAR);
-        obj.setDisplayName("Elo Arena");
+        obj.setDisplayName("Game");
 
         s0 = obj.getScore(Bukkit.getOfflinePlayer("Selection d'inventaire: " + time));
 
@@ -72,7 +73,24 @@ public class ScoreboardInventory {
 
     public void stopSelectionPhase() {
         Bukkit.getScheduler().cancelTask(finalId);
+        for(Player player: players) {
+            this.scoreBoardKill(player,0);
+        }
         parent.startGame();
+    }
+
+    private void scoreBoardKill(Player p, int kill) {
+        scoreBoard = sbManager.getNewScoreboard();
+        obj = scoreBoard.registerNewObjective("ScoreBoard", "dummy");
+
+        obj.setDisplaySlot(DisplaySlot.SIDEBAR);
+        obj.setDisplayName("Elo Arena");
+
+        Score scoreKill = obj.getScore(Bukkit.getOfflinePlayer("Kill: " + kill));
+
+        scoreKill.setScore(6);
+
+        p.setScoreboard(scoreBoard);
     }
 
     public void updateScoreBoard(Player p) {
@@ -84,9 +102,10 @@ public class ScoreboardInventory {
         obj.setDisplayName("Elo Arena");
 
         s0 = obj.getScore(Bukkit.getOfflinePlayer("Selection d'inventaire"));
-        s0 = obj.getScore(Bukkit.getOfflinePlayer("Time: " + time));
+        s1 = obj.getScore(Bukkit.getOfflinePlayer("La partie commence dans: " + time));
 
-        s0.setScore(6);
+        s1.setScore(6);
+        s0.setScore(7);
 
         p.setScoreboard(scoreBoard);
     }

@@ -10,17 +10,13 @@ import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.inventory.meta.SkullMeta;
 import swiss.kamyh.elo.Elo;
-import swiss.kamyh.elo.Party;
 import swiss.kamyh.elo.listeners.IAction;
 import swiss.kamyh.elo.tools.Coord;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import static java.awt.SystemColor.menu;
 
 /**
  * Created by Vincent on 05.06.2016.
