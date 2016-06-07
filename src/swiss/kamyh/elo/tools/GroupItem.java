@@ -15,8 +15,7 @@ public class GroupItem {
     private GroupItemType type;
     private ArrayList<ItemArmor> items;
 
-    public GroupItem(GroupItemType type, int max)
-    {
+    public GroupItem(GroupItemType type, int max) {
         this.type = type;
         this.max = max;
         this.number = 0;
@@ -43,8 +42,7 @@ public class GroupItem {
         return type;
     }
 
-    public void addItem(ItemArmor item)
-    {
+    public void addItem(ItemArmor item) {
         this.items.add(item);
     }
 
@@ -79,6 +77,8 @@ public class GroupItem {
                 return "Divers";
             case BLOCK:
                 return "Block";
+            case POTIONS:
+                return "Potions";
         }
 
         return null;

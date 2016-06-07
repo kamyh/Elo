@@ -26,6 +26,9 @@ public class Elo extends JavaPlugin{
 
     @Override
     public void onEnable(){
+        Bukkit.getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
+
+
         this.instance = this;
         queue = new MenuQueue();
         this.instance.getServer().getPluginManager().registerEvents(new MenuListener(), this);

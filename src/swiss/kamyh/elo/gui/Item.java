@@ -24,6 +24,7 @@ public class Item {
     private Coord coordinates;
     private IAction actionListener;
     private HashMap<Object, Object> metadata;
+    private String originalName;
 
     public void setIcon(ItemStack holder) {
         this.item = holder;
@@ -42,6 +43,7 @@ public class Item {
     }
 
     public Item(ItemStack holder) {
+        this.originalName = holder.getItemMeta().getDisplayName();
         metadata = new HashMap<>();
         if (holder == null) {
             Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "The ItemStack used as a menu object was null." + ChatColor.RESET);
@@ -57,6 +59,7 @@ public class Item {
     public Item(Material icon, byte data, String name, List<String> tooltip) {
         metadata = new HashMap<>();
         item = new ItemStack(icon, 1, data);
+        this.originalName = item.getItemMeta().getDisplayName();
         ItemMeta meta = item.getItemMeta();
         meta.setLore(tooltip);
         meta.setDisplayName(name);
@@ -106,4 +109,14 @@ public class Item {
     }
 
 
+    public String getOriginalName() {
+        return originalName;
+    }
+
+    public void setCustumName(String custumName) {
+        this.originalName = custumName;
+        ItemMeta meta = item.getItemMeta();
+        meta.setDisplayName(custumName);
+        item.setItemMeta(meta);
+    }
 }

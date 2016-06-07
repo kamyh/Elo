@@ -19,7 +19,9 @@ import swiss.kamyh.elo.tools.Coord;
 import swiss.kamyh.elo.tools.MenuQueue;
 import swiss.kamyh.elo.tools.PlayerTools;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -125,6 +127,17 @@ public class Party {
      */
     public void menu(CommandSender sender, Command cmd, String[] args) {
         //TODO test if 3 args
+        List<List<Player>> participants = new ArrayList<>();
+        participants.add(new ArrayList<Player>());
+        participants.add(new ArrayList<Player>());
+        for(String playerName:args)
+        {
+            Player player = Bukkit.getPlayer(playerName);
+            participants.get(0).add(player);
+        }
+
+        //TODO match making
+
         if ((sender instanceof Player) && cmd.getName().compareTo("menu") == 0) {
             this.sender = (Player) sender;
             Inventory inventory = this.sender.getInventory();
@@ -141,7 +154,8 @@ public class Party {
                 public void onClick(ClickType clickType, Item item, Player whoClicked) {
                     if (clickType == ClickType.LEFT) {
                         System.out.println(Elo.getInstance().getQueue().toString());
-                        Arena arena = new Arena();
+
+                        Arena arena = new Arena(participants);
                     }
                 }
             });

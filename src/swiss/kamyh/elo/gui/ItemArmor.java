@@ -1,6 +1,7 @@
 package swiss.kamyh.elo.gui;
 
 import org.bukkit.Material;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import swiss.kamyh.elo.tools.Coord;
@@ -13,9 +14,9 @@ import java.util.List;
  * Created by Vincent on 06.06.2016.
  */
 public class ItemArmor extends Item {
-    private int max;
-    private int number;
-    private GroupItem groupItem;
+    protected int max;
+    protected int number;
+    protected GroupItem groupItem;
 
     public ItemArmor(ItemStack holder, int max) {
         super(holder);
@@ -37,7 +38,7 @@ public class ItemArmor extends Item {
         this.groupItem = groupItem;
         this.groupItem.addItem(this);
 
-        updateTagQuantity();
+        this.updateTagQuantity();
     }
 
     public int getMax() {
@@ -67,17 +68,29 @@ public class ItemArmor extends Item {
         }
     }
 
+    private String getName()
+    {
+        return this.getOriginalName();
+    }
+
     public void updateTagQuantity() {
         Menu menu = this.getMenu();
 
         ItemMeta itemMeta = this.getItem().getItemMeta();
-        String tag = "Quantity: " + this.number + "/" + this.max;
-        String lore_1 = "Quantity " + this.groupItem.toString() + ": " + this.groupItem.getNumber() + "/" + this.groupItem.getMax();
+        String lore_1 = "Quantity: " + this.number + "/" + this.max;
+        String lore_2 = "Quantity " + this.groupItem.toString() + ": " + this.groupItem.getNumber() + "/" + this.groupItem.getMax();
 
-        itemMeta.setDisplayName(tag);
-        itemMeta.setLore(Arrays.asList(lore_1));
+        itemMeta.setLore(Arrays.asList(lore_1,lore_2));
 
         this.getItem().setItemMeta(itemMeta);
         menu.setMenuObjectAt(this.getCoordinates(), this);
+    }
+
+    public void enchant(Enchantment ench, int level) {
+        this.getItem().addEnchantment(ench,level);
+    }
+
+    public int getNumber() {
+        return number;
     }
 }

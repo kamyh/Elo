@@ -12,5 +12,6 @@ public enum GroupItemType {
     BOOTS,
     COMPOS,
     VARIOUS,
-    BLOCK
+    BLOCK,
+    POTIONS
 }
