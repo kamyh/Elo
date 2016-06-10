@@ -25,11 +25,13 @@ public class ScoreboardTimerized extends Scoreboard implements ITimerized{
 
     @Override
     public void callbackTimer(ScoreboardItemTimed item) {
-        this.update(item);
+        this.update();
     }
 
     @Override
     public void timesUp() {
         this.parents.startGame();
     }
+
+
 }

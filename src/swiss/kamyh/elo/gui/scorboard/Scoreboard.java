@@ -1,7 +1,6 @@
 package swiss.kamyh.elo.gui.scorboard;
 
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
@@ -15,7 +14,7 @@ import java.util.Iterator;
  * Created by Vincent on 07.06.2016.
  * TODO TEST
  */
-public class Scoreboard{
+public class Scoreboard {
     public static int NumberOfLine = 13;
     private String objectiveName;
 
@@ -52,23 +51,27 @@ public class Scoreboard{
     }
 
     public void add(ScoreboardItem item) {
-        if(!this.items.contains(item)) {
-            this.items.add(item);
-            this.update(item);
-        }
 
-        //TODO Trhow error ???
+        if (!this.items.contains(item)) {
+            this.items.add(item);
+            this.update();
+        }
+        System.out.printf("Scoreboard has %ditems.%n", this.items.size());
+
+        //TODO Throw error ???
     }
 
-    protected void update(ScoreboardItem item) {
+    protected void update() {
         scoreBoard = sbManager.getNewScoreboard();
         obj = scoreBoard.registerNewObjective("ScoreBoard", this.objectiveName);
 
         obj.setDisplaySlot(DisplaySlot.SIDEBAR);
         obj.setDisplayName(this.name);
 
-        Score score = obj.getScore(item.toString());
-        score.setScore(item.getLine());
+        for (ScoreboardItem item : this.items) {
+            Score score = obj.getScore(item.toString());
+            score.setScore(item.getLine());
+        }
 
         for (Player player : this.players) {
             player.setScoreboard(scoreBoard);
@@ -76,21 +79,18 @@ public class Scoreboard{
     }
 
     public void replace(ScoreboardItem item) {
-        if(this.items.contains(item)) {
+        if (this.items.contains(item)) {
             int i = this.items.indexOf(item);
             this.items.remove(i);
             this.items.add(item);
-            this.update(item);
+            this.update();
         }
     }
 
-    public void removeItemAt(int i)
-    {
+    public void removeItemAt(int i) {
         Iterator it = this.items.iterator();
-        for(ScoreboardItem scoreboardItem: this.items)
-        {
-            if(scoreboardItem.getLine() == i)
-            {
+        for (ScoreboardItem scoreboardItem : this.items) {
+            if (scoreboardItem.getLine() == i) {
                 this.items.remove(scoreboardItem);
             }
         }
@@ -98,13 +98,18 @@ public class Scoreboard{
 
     public ScoreboardItem getItemAtLine(int i) {
         Iterator it = this.items.iterator();
-        for(ScoreboardItem scoreboardItem: this.items)
-        {
-            if(scoreboardItem.getLine() == i)
-            {
+        for (ScoreboardItem scoreboardItem : this.items) {
+            if (scoreboardItem.getLine() == i) {
                 return scoreboardItem;
             }
         }
         return null;
+    }
+
+    public static String getElementSeparator(int n) {
+        String str = "";
+        for(int i = 0;i < n;i++)
+            str += "-";
+        return str;
     }
 }

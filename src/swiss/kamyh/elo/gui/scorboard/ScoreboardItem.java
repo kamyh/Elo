@@ -26,12 +26,10 @@ public class ScoreboardItem {
         return line;
     }
 
-    public String toString()
-    {
+    public String toString() {
         String str = "";
 
-        for(CustomMessage s: this.message)
-        {
+        for (CustomMessage s : this.message) {
             str += s.color + s.string;
         }
 
@@ -48,9 +46,19 @@ public class ScoreboardItem {
 
     @Override
     public boolean equals(Object item) {
-        if (item == null && item instanceof ScoreboardItem && ((ScoreboardItem)item).getLine() != this.getLine()) {
-            return false;
+        if(item instanceof ScoreboardItem && item != null) {
+            if (((ScoreboardItem) item).getLine() != this.line) {
+                return false;
+            }
         }
         return true;
+    }
+
+    @Override
+    public int hashCode() {
+        System.out.println("===========================");
+        int hash = 7;
+        hash = 17 * hash + (this.line != -1 ? this.line : 0);
+        return hash;
     }
 }

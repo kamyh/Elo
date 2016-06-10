@@ -23,7 +23,6 @@ import java.util.*;
  */
 public class Arena {
 
-    private ScoreboardArenaDepracted scoreBoard;
     HashMap<org.bukkit.Material, ItemArmor> items;
     List<List<Player>> participants;
     private ScoreboardTimerized scoreboardArenaDepracted;
@@ -79,7 +78,11 @@ public class Arena {
     private void createScorebord() {
         this.scoreboardArenaDepracted = new ScoreboardTimerized((ArrayList<Player>) ListTools.flatten(this.participants), "Arena UHC", this);
         this.scoreBoardItemInventorySelection = new ScoreboardItemTimed(this.scoreboardArenaDepracted, new CustomMessage[]{new CustomMessage(ChatColor.AQUA, "Time Left: ")}, 2, 100);
+        ScoreboardItem scoreboardItemPhaseName = new ScoreboardItem(this.scoreboardArenaDepracted, new CustomMessage[]{new CustomMessage(ChatColor.BLUE, "Selection de l'inventaire")}, 4);
+        ScoreboardItem separator_1 = new ScoreboardItem(this.scoreboardArenaDepracted, new CustomMessage[]{new CustomMessage(ChatColor.GRAY, Scoreboard.getElementSeparator(20))}, 3);
         this.scoreboardArenaDepracted.add(this.scoreBoardItemInventorySelection);
+        this.scoreboardArenaDepracted.add(separator_1);
+        this.scoreboardArenaDepracted.add(scoreboardItemPhaseName);
     }
 
     private void armorSelection() {
@@ -195,6 +198,8 @@ public class Arena {
                     //validate choice
                     System.out.println("VALIDATION");
                     Arena.this.scoreBoardItemInventorySelection.stop();
+                    //TODO Not Working
+                    Arena.this.items.remove(Arena.this.scoreBoardItemInventorySelection);
                     //TODO start next phase
                     startGame();
                 }

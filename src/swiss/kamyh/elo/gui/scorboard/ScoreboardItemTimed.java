@@ -23,7 +23,7 @@ public class ScoreboardItemTimed extends ScoreboardItem{
             @Override
             public void run() {
                 time--;
-                ScoreboardItemTimed.this.parent.update(ScoreboardItemTimed.this);
+                ScoreboardItemTimed.this.parent.update();
 
                 if (time <= 0) {
                     stop();
