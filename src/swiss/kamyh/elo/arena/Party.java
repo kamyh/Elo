@@ -103,7 +103,7 @@ public class Party {
             participants.get(0).add(player);
         }
 
-        for (int i = versus + 1; i < versus * 2 +1; i++) {
+        for (int i = versus + 1; i < versus * 2 + 1; i++) {
             //TODO test player validity
             Player player = Bukkit.getPlayer(args[i]);
             participants.get(1).add(player);
@@ -116,10 +116,6 @@ public class Party {
             inventory.clear();
 
             Menu menu = new Menu(Bukkit.createInventory(this.sender, 54, "Elo"));
-
-
-            System.out.println("Team 1:" + participants.get(0).size());
-            System.out.println("Team 2:" + participants.get(1).size());
 
             menu.addLeaveIcon(9, 6);
             addTeamMateSelectionIcon(this.sender, participants.get(0), 5 - (int) Math.floor(versus / 2.), 2);
@@ -139,26 +135,6 @@ public class Party {
             });
 
             menu.openForPlayer(this.sender);
-        }
-    }
-
-    public void invitation(CommandSender sender, Command cmd) {
-        System.out.print(cmd.getName());
-
-        if ((sender instanceof Player) && cmd.getName().compareTo("party") == 0) {
-            Player player = (Player) sender;
-
-            // Create a new ItemStack (type: diamond)
-            ItemStack diamond = new ItemStack(Material.DIAMOND);
-
-            // Create a new ItemStack (type: brick)
-            ItemStack bricks = new ItemStack(Material.BRICK);
-
-            // Set the amount of the ItemStack
-            bricks.setAmount(20);
-
-            // Give the player our items (comma-seperated list of all ItemStack)
-            player.getInventory().addItem(bricks, diamond);
         }
     }
 

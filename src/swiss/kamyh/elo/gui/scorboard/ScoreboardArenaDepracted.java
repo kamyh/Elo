@@ -1,10 +1,11 @@
-package swiss.kamyh.elo.gui;
+package swiss.kamyh.elo.gui.scorboard;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitScheduler;
 import org.bukkit.scoreboard.*;
+import org.bukkit.scoreboard.Scoreboard;
 import swiss.kamyh.elo.Elo;
 import swiss.kamyh.elo.arena.Arena;
 
@@ -13,7 +14,7 @@ import java.util.ArrayList;
 /**
  * Created by Vincent on 07.06.2016.
  */
-public class ScoreboardArena {
+public class ScoreboardArenaDepracted {
     int time = 30;
 
     private ScoreboardManager sbManager;
@@ -26,7 +27,7 @@ public class ScoreboardArena {
     private Arena parent;
     private ArrayList<Player> players;
 
-    public ScoreboardArena(Arena parent, ArrayList<Player> players)
+    public ScoreboardArenaDepracted(Arena parent, ArrayList<Player> players)
     {
         this.parent = parent;
         this.players = players;
@@ -81,7 +82,7 @@ public class ScoreboardArena {
 
     private void scoreBoardKill(Player p, int kill) {
         scoreBoard = sbManager.getNewScoreboard();
-        obj = scoreBoard.registerNewObjective("ScoreBoard", "dummy");
+        obj = scoreBoard.registerNewObjective("ScoreBoard", "arean");
 
         obj.setDisplaySlot(DisplaySlot.SIDEBAR);
         obj.setDisplayName("Elo Arena");

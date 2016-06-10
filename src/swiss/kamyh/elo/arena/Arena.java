@@ -9,6 +9,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import swiss.kamyh.elo.Elo;
 import swiss.kamyh.elo.enumerate.GroupItemType;
 import swiss.kamyh.elo.gui.*;
+import swiss.kamyh.elo.gui.scorboard.*;
 import swiss.kamyh.elo.listeners.IAction;
 import swiss.kamyh.elo.tools.Coord;
 import swiss.kamyh.elo.tools.GroupItem;
@@ -22,10 +23,11 @@ import java.util.*;
  */
 public class Arena {
 
-    private ScoreboardArena scoreBoard;
+    private ScoreboardArenaDepracted scoreBoard;
     HashMap<org.bukkit.Material, ItemArmor> items;
     List<List<Player>> participants;
-    private ScoreboardArena scoreboardArena;
+    private ScoreboardTimerized scoreboardArenaDepracted;
+    private ScoreboardItemTimed scoreBoardItemInventorySelection;
 
     public Arena(List<List<Player>> participants) {
 
@@ -43,6 +45,7 @@ public class Arena {
         item.setActionListener(new IAction() {
             public void onClick(ClickType clickType, Item menuObject, Player player) {
                 if (clickType == ClickType.LEFT) {
+                    Arena.this.scoreBoardItemInventorySelection.start();
                     armorSelection();
                 }
             }
@@ -74,8 +77,9 @@ public class Arena {
     }
 
     private void createScorebord() {
-        this.scoreboardArena = new ScoreboardArena(this, (ArrayList<Player>) ListTools.flatten(this.participants));
-        this.scoreboardArena.init();
+        this.scoreboardArenaDepracted = new ScoreboardTimerized((ArrayList<Player>) ListTools.flatten(this.participants), "Arena UHC", this);
+        this.scoreBoardItemInventorySelection = new ScoreboardItemTimed(this.scoreboardArenaDepracted, new CustomMessage[]{new CustomMessage(ChatColor.AQUA, "Time Left: ")}, 2, 100);
+        this.scoreboardArenaDepracted.add(this.scoreBoardItemInventorySelection);
     }
 
     private void armorSelection() {
@@ -190,7 +194,9 @@ public class Arena {
                 if (clickType == ClickType.LEFT) {
                     //validate choice
                     System.out.println("VALIDATION");
-                    scoreboardArena.stopSelectionPhase();
+                    Arena.this.scoreBoardItemInventorySelection.stop();
+                    //TODO start next phase
+                    startGame();
                 }
             }
         });

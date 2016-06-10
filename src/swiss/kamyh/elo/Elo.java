@@ -32,7 +32,6 @@ public class Elo extends JavaPlugin{
 
     @Override
     public void onEnable(){
-        Bukkit.getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
 
         this.instance = this;
         queue = new MenuQueue();
@@ -41,7 +40,7 @@ public class Elo extends JavaPlugin{
 
         //Fired when the server enables the plugin
         this.party = new Party();
-        this.getCommand("party").setExecutor(new Elo());
+        this.getCommand("party").setExecutor(this);
 
         Bukkit.getConsoleSender().sendMessage("Initializing");
     }
@@ -54,7 +53,6 @@ public class Elo extends JavaPlugin{
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
         this.party.menu(sender, cmd, args);
-        this.party.invitation(sender, cmd);
 
         // If the player (or console) uses our command correct, we can return true
         return true;
