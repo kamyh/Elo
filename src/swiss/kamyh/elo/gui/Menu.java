@@ -185,4 +185,17 @@ public class Menu {
         Coord coordinates = new Coord(this, x, y);
         this.setMenuObjectAt(coordinates, item);
     }
+
+    public Item addValidate(int x, int y) {
+        ItemStack itemStack = new ItemStack(org.bukkit.Material.ITEM_FRAME);
+        ItemMeta itemMeta = itemStack.getItemMeta();
+        itemMeta.setDisplayName("Valider");
+        itemStack.setItemMeta(itemMeta);
+        Item item = new Item(itemStack);
+
+        Coord coordinates = new Coord(this, x, y);
+        this.setMenuObjectAt(coordinates, item);
+
+        return item;
+    }
 }

@@ -8,6 +8,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import swiss.kamyh.elo.listeners.IAction;
 import swiss.kamyh.elo.tools.Coord;
+import swiss.kamyh.elo.tools.GroupItem;
 
 import java.awt.event.ActionListener;
 import java.util.HashMap;

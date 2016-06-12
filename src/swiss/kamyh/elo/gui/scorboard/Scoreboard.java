@@ -19,6 +19,8 @@ public class Scoreboard {
     private String objectiveName;
 
     protected ScoreboardManager sbManager;
+
+
     protected org.bukkit.scoreboard.Scoreboard scoreBoard;
     private ArrayList<ScoreboardItem> items;
     protected Objective obj;
@@ -108,8 +110,12 @@ public class Scoreboard {
 
     public static String getElementSeparator(int n) {
         String str = "";
-        for(int i = 0;i < n;i++)
+        for (int i = 0; i < n; i++)
             str += "-";
         return str;
+    }
+
+    public org.bukkit.scoreboard.Scoreboard getScoreBoard() {
+        return scoreBoard;
     }
 }

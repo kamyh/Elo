@@ -1,11 +1,6 @@
 package swiss.kamyh.elo.gui.scorboard;
 
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.bukkit.scoreboard.DisplaySlot;
-import org.bukkit.scoreboard.Objective;
-import org.bukkit.scoreboard.Score;
-import org.bukkit.scoreboard.ScoreboardManager;
 import swiss.kamyh.elo.arena.Arena;
 
 import java.util.ArrayList;

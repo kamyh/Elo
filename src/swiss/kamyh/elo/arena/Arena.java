@@ -6,8 +6,11 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.scoreboard.Team;
 import swiss.kamyh.elo.Elo;
+import swiss.kamyh.elo.arena.scenario.*;
 import swiss.kamyh.elo.enumerate.GroupItemType;
+import swiss.kamyh.elo.enumerate.ScenarioEnum;
 import swiss.kamyh.elo.gui.*;
 import swiss.kamyh.elo.gui.scorboard.*;
 import swiss.kamyh.elo.listeners.IAction;
@@ -25,8 +28,10 @@ public class Arena {
 
     HashMap<org.bukkit.Material, ItemArmor> items;
     List<List<Player>> participants;
-    private ScoreboardTimerized scoreboardArenaDepracted;
+    private ScoreboardTimerized scoreboardArena;
     private ScoreboardItemTimed scoreBoardItemInventorySelection;
+    private Team team_1;
+    private Team team_2;
 
     public Arena(List<List<Player>> participants) {
 
@@ -63,7 +68,7 @@ public class Arena {
             player.getInventory().clear();
             player.setWalkSpeed(0);
 
-            player.teleport(new Location(Bukkit.getServer().getWorld("world"),10,5,5));
+            player.teleport(new Location(Bukkit.getServer().getWorld("world"), 10, 5, 5));
         }
 
         for (Player player : this.participants.get(1)) {
@@ -71,18 +76,18 @@ public class Arena {
             player.getInventory().clear();
             player.setWalkSpeed(0);
 
-            player.teleport(new Location(Bukkit.getServer().getWorld("world"),-10,5,5));
+            player.teleport(new Location(Bukkit.getServer().getWorld("world"), -10, 5, 5));
         }
     }
 
     private void createScorebord() {
-        this.scoreboardArenaDepracted = new ScoreboardTimerized((ArrayList<Player>) ListTools.flatten(this.participants), "Arena UHC", this);
-        this.scoreBoardItemInventorySelection = new ScoreboardItemTimed(this.scoreboardArenaDepracted, new CustomMessage[]{new CustomMessage(ChatColor.AQUA, "Time Left: ")}, 2, 100);
-        ScoreboardItem scoreboardItemPhaseName = new ScoreboardItem(this.scoreboardArenaDepracted, new CustomMessage[]{new CustomMessage(ChatColor.BLUE, "Selection de l'inventaire")}, 4);
-        ScoreboardItem separator_1 = new ScoreboardItem(this.scoreboardArenaDepracted, new CustomMessage[]{new CustomMessage(ChatColor.GRAY, Scoreboard.getElementSeparator(20))}, 3);
-        this.scoreboardArenaDepracted.add(this.scoreBoardItemInventorySelection);
-        this.scoreboardArenaDepracted.add(separator_1);
-        this.scoreboardArenaDepracted.add(scoreboardItemPhaseName);
+        this.scoreboardArena = new ScoreboardTimerized((ArrayList<Player>) ListTools.flatten(this.participants), "Arena UHC", this);
+        this.scoreBoardItemInventorySelection = new ScoreboardItemTimed(this.scoreboardArena, new CustomMessage[]{new CustomMessage(ChatColor.AQUA, "Time Left: ")}, 2, 100);
+        ScoreboardItem scoreboardItemPhaseName = new ScoreboardItem(this.scoreboardArena, new CustomMessage[]{new CustomMessage(ChatColor.BLUE, "Selection de l'inventaire")}, 4);
+        ScoreboardItem separator_1 = new ScoreboardItem(this.scoreboardArena, new CustomMessage[]{new CustomMessage(ChatColor.GRAY, Scoreboard.getElementSeparator(20))}, 3);
+        this.scoreboardArena.add(this.scoreBoardItemInventorySelection);
+        this.scoreboardArena.add(separator_1);
+        this.scoreboardArena.add(scoreboardItemPhaseName);
     }
 
     private void armorSelection() {
@@ -197,11 +202,9 @@ public class Arena {
                 if (clickType == ClickType.LEFT) {
                     //validate choice
                     System.out.println("VALIDATION");
-                    Arena.this.scoreBoardItemInventorySelection.stop();
                     //TODO Not Working
                     Arena.this.items.remove(Arena.this.scoreBoardItemInventorySelection);
-                    //TODO start next phase
-                    startGame();
+                    Arena.this.preGame();
                 }
             }
         });
@@ -210,11 +213,26 @@ public class Arena {
         menu.setMenuObjectAt(coordinates, item);
     }
 
-    public void startGame() {
+    public void preGame() {
         for (Player player : (ArrayList<Player>) ListTools.flatten(this.participants)) {
             player.getInventory().clear();
         }
 
+        this.team_1 = scoreboardArena.getScoreBoard().registerNewTeam("Team RAND NAME 1");
+        this.team_2 = scoreboardArena.getScoreBoard().registerNewTeam("Team RAND NAME 2");
+
+        for (Player player : this.participants.get(0)) {
+            this.team_1.addEntry(player.getName());
+        }
+
+        for (Player player : this.participants.get(1)) {
+            this.team_2.addEntry(player.getName());
+        }
+
+        askForScenarios();
+    }
+
+    public void startGame() {
         for (Map.Entry<Material, ItemArmor> entry : this.items.entrySet()) {
             for (Player player : (ArrayList<Player>) ListTools.flatten(this.participants)) {
                 ItemArmor item = entry.getValue();
@@ -233,10 +251,103 @@ public class Arena {
         }
 
         for (Player player : (ArrayList<Player>) ListTools.flatten(this.participants)) {
+            //TODO remove all custum inventory ???
+            player.closeInventory();
             player.setGameMode(GameMode.SURVIVAL);
             player.setWalkSpeed(0.4F);
         }
+    }
 
+    private void loadScenarios(ArrayList<ItemScenarios> itemScenarios) {
+        for (ItemScenarios item : itemScenarios) {
+            if (item.getSelected()) {
+                IScenario s = null;
+                switch (item.getScenario()) {
+                    case BRAIN_FUCK_TELEPORTATION:
+                        s = new BrainFuckTeleportation();
+                        s.activate();
+                        break;
+                    case BUNNY_UP:
+                        s = new BunnyUp();
+                        s.activate();
+                        break;
+                    case FLOWER_POWER:
+                        s = new FlowerPower();
+                        s.activate();
+                        break;
+                    case FRIENDLY_FIRE:
+                        s = new FriendlyFire(this.scoreboardArena);
+                        s.activate();
+                        break;
+                    case GLADIATOR:
+                        s = new Gladiator();
+                        s.activate();
+                        break;
+                    case HOLYDAY_ON_ICE:
+                        s = new HolydayOnIce();
+                        s.activate();
+                        break;
+                    case MAGIC_PONEY:
+                        s = new MagicPoney();
+                        s.activate();
+                        break;
+                    case WALKING_DEAD:
+                        s = new WalkingDead();
+                        s.activate();
+                        break;
+                }
+            }
+        }
+    }
+
+    private void askForScenarios() {
+        ArrayList<ItemScenarios> itemScenarios = new ArrayList<>();
+        Menu menu = new Menu(Bukkit.createInventory(Elo.getInstance().getQueue().getCurrent().getInventory().getHolder(), 54, "Scénarios"));
+
+        /* Friendly Fire */
+        ItemScenarios itemFF = new ItemScenarios(ScenarioEnum.FRIENDLY_FIRE, 5, 3, Material.FENCE_GATE, menu);
+        itemScenarios.add(itemFF);
+        itemFF.update();
+        itemFF.setActionListener(new IAction() {
+            @Override
+            public void onClick(ClickType clickType, Item menuObject, Player player) {
+                if (clickType == ClickType.LEFT) {
+                    ItemScenarios itemS = ((ItemScenarios) menuObject);
+                    itemS.setSelected(!itemS.getSelected());
+                }
+            }
+        });
+
+        /* Friendly Fire */
+        ItemScenarios itemBU = new ItemScenarios(ScenarioEnum.BUNNY_UP, 4, 3, Material.RABBIT_FOOT, menu);
+        itemScenarios.add(itemBU);
+        itemBU.update();
+        itemBU.setActionListener(new IAction() {
+            @Override
+            public void onClick(ClickType clickType, Item menuObject, Player player) {
+                if (clickType == ClickType.LEFT) {
+                    ItemScenarios itemS = ((ItemScenarios) menuObject);
+                    itemS.setSelected(!itemS.getSelected());
+                }
+            }
+        });
+
+        //TODO TODO TODO
+
+        //menu.addLeaveIcon(9, 6);
+        //menu.addPrevIcon(8, 6);
+        Item validateItem = menu.addValidate(9, 6);
+
+        validateItem.setActionListener(new IAction() {
+            @Override
+            public void onClick(ClickType clickType, Item item, Player whoClicked) {
+                //TODO start realGame
+                loadScenarios(itemScenarios);
+                Arena.this.scoreBoardItemInventorySelection.stop();
+            }
+        });
+
+        menu.openForPlayer((Player) Elo.getInstance().getQueue().getCurrent().getInventory().getHolder());
     }
 
 }
