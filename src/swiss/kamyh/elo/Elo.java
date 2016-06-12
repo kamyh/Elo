@@ -1,23 +1,26 @@
 package swiss.kamyh.elo;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 import swiss.kamyh.elo.arena.Party;
 import swiss.kamyh.elo.listeners.MenuListener;
 import swiss.kamyh.elo.listeners.MenuOver;
+import swiss.kamyh.elo.tools.Coord;
 import swiss.kamyh.elo.tools.MenuQueue;
-
-import java.util.List;
-import java.util.PriorityQueue;
-import java.util.Queue;
 
 /**
  * Created by Vincent on 05.06.2016.
  */
-public class Elo extends JavaPlugin{
+public class Elo extends JavaPlugin implements Listener {
     /**
      * attributs Methods
      */
@@ -25,18 +28,21 @@ public class Elo extends JavaPlugin{
     private Party party;
     private static Elo instance;
     private static MenuQueue queue;
+    private boolean onInteract;
+    private boolean onDeath;
 
     /**
      * override Methods
      */
 
     @Override
-    public void onEnable(){
+    public void onEnable() {
 
         this.instance = this;
         queue = new MenuQueue();
         this.instance.getServer().getPluginManager().registerEvents(new MenuListener(), this);
         this.instance.getServer().getPluginManager().registerEvents(new MenuOver(), this);
+        this.instance.getServer().getPluginManager().registerEvents(this, this);
 
         //Fired when the server enables the plugin
         this.party = new Party();
@@ -58,6 +64,27 @@ public class Elo extends JavaPlugin{
         return true;
     }
 
+    @EventHandler
+    public void onPlayerMove(PlayerMoveEvent e) {
+        if (this.onInteract) {
+            BlockFace dir = Coord.getCardinalDirection(e.getPlayer());
+            Block toBlock = e.getTo().getBlock().getRelative(BlockFace.DOWN);
+            Block backBlock = toBlock.getRelative(dir);
+            Material to = backBlock.getType();
+            if (to.equals(Material.GLASS) || to.equals(Material.GRASS)) {
+                backBlock.setTypeId(174);
+            }
+        }
+    }
+
+    @EventHandler
+    public void onPlayerDeath(PlayerDeathEvent e)
+    {
+        if(this.onDeath) {
+            System.out.println("DEATH");
+        }
+    }
+
     /**
      * private Methods
      */
@@ -66,14 +93,15 @@ public class Elo extends JavaPlugin{
      * Public Methods
      */
 
-    public static Elo getInstance()
-    {
+    public static Elo getInstance() {
         return instance;
     }
 
-    public MenuQueue getQueue()
-    {
+    public MenuQueue getQueue() {
         return queue;
     }
 
+    public void setOnInteract(boolean onInteract) {
+        this.onInteract = onInteract;
+    }
 }

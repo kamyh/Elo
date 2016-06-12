@@ -45,7 +45,7 @@ public class ItemScenarios extends Item{
         Menu menu = this.getMenu();
         ItemMeta itemMeta = this.getItem().getItemMeta();
 
-        itemMeta.setDisplayName("Scenario: " + this.getScenario().toString());
+        itemMeta.setDisplayName("Scenario: " + Scenario.nameString(this.getScenario()));
 
         String lore_1 = "Desactivé";
 

@@ -32,6 +32,7 @@ public class Arena {
     private ScoreboardItemTimed scoreBoardItemInventorySelection;
     private Team team_1;
     private Team team_2;
+    private ArrayList<ItemScenarios> itemScenarios;
 
     public Arena(List<List<Player>> participants) {
 
@@ -233,6 +234,7 @@ public class Arena {
     }
 
     public void startGame() {
+        String scenario = "";
         for (Map.Entry<Material, ItemArmor> entry : this.items.entrySet()) {
             for (Player player : (ArrayList<Player>) ListTools.flatten(this.participants)) {
                 ItemArmor item = entry.getValue();
@@ -250,11 +252,25 @@ public class Arena {
             }
         }
 
+        for(ItemScenarios s: this.itemScenarios)
+        {
+            if(s.getSelected()) {
+                scenario += Scenario.nameString(s.getScenario()) + " - ";
+            }
+        }
+
+        if(!scenario.equals("")) {
+            scenario = scenario.substring(0, scenario.length() - 2);
+        }
+
         for (Player player : (ArrayList<Player>) ListTools.flatten(this.participants)) {
             //TODO remove all custum inventory ???
             player.closeInventory();
             player.setGameMode(GameMode.SURVIVAL);
             player.setWalkSpeed(0.4F);
+            if(!scenario.equals("")) {
+                player.sendMessage(scenario);
+            }
         }
     }
 
@@ -268,7 +284,7 @@ public class Arena {
                         s.activate();
                         break;
                     case BUNNY_UP:
-                        s = new BunnyUp();
+                        s = new BunnyUp((ArrayList<Player>) ListTools.flatten(this.participants));
                         s.activate();
                         break;
                     case FLOWER_POWER:
@@ -301,7 +317,7 @@ public class Arena {
     }
 
     private void askForScenarios() {
-        ArrayList<ItemScenarios> itemScenarios = new ArrayList<>();
+        itemScenarios = new ArrayList<>();
         Menu menu = new Menu(Bukkit.createInventory(Elo.getInstance().getQueue().getCurrent().getInventory().getHolder(), 54, "Scénarios"));
 
         /* Friendly Fire */
@@ -323,6 +339,20 @@ public class Arena {
         itemScenarios.add(itemBU);
         itemBU.update();
         itemBU.setActionListener(new IAction() {
+            @Override
+            public void onClick(ClickType clickType, Item menuObject, Player player) {
+                if (clickType == ClickType.LEFT) {
+                    ItemScenarios itemS = ((ItemScenarios) menuObject);
+                    itemS.setSelected(!itemS.getSelected());
+                }
+            }
+        });
+
+        /* Holyday On Ice */
+        ItemScenarios itemHOI = new ItemScenarios(ScenarioEnum.HOLYDAY_ON_ICE, 6, 3, Material.ICE, menu);
+        itemScenarios.add(itemHOI);
+        itemHOI.update();
+        itemHOI.setActionListener(new IAction() {
             @Override
             public void onClick(ClickType clickType, Item menuObject, Player player) {
                 if (clickType == ClickType.LEFT) {
