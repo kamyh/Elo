@@ -1,5 +1,6 @@
 package swiss.kamyh.elo.arena.scenario;
 
+import swiss.kamyh.elo.Elo;
 import swiss.kamyh.elo.enumerate.ScenarioEnum;
 
 /**
@@ -13,6 +14,6 @@ public class BrainFuckTeleportation extends Scenario implements IScenario{
 
     @Override
     public void activate() {
-
+        Elo.getInstance().setTeleportBrain(true);
     }
 }

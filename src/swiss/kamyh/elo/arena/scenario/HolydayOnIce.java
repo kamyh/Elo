@@ -1,13 +1,7 @@
 package swiss.kamyh.elo.arena.scenario;
 
-import org.bukkit.ChatColor;
-import org.bukkit.entity.Player;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
 import swiss.kamyh.elo.Elo;
 import swiss.kamyh.elo.enumerate.ScenarioEnum;
-
-import java.util.ArrayList;
 
 /**
  * Created by Vincent on 08.06.2016.
@@ -22,7 +16,7 @@ public class HolydayOnIce extends Scenario implements IScenario{
 
     @Override
     public void activate() {
-        Elo.getInstance().setOnInteract(true);
+        Elo.getInstance().setHolydayOnIce(true);
     }
 
 

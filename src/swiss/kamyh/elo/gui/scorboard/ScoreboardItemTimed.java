@@ -11,6 +11,7 @@ public class ScoreboardItemTimed extends ScoreboardItem{
     private int time;
     private int finalId;
     private ScoreboardTimerized parent;
+    private IActionOnTimeOut onTimeOut;
 
     public ScoreboardItemTimed(ScoreboardTimerized parent, CustomMessage[] message, int line, int time) {
         super(parent, message, line);
@@ -37,7 +38,9 @@ public class ScoreboardItemTimed extends ScoreboardItem{
 
     public void stop() {
         Bukkit.getScheduler().cancelTask(finalId);
-        this.parent.timesUp();
+        //this.parent.timesUp();
+
+        this.onTimeOut.callBack();
     }
 
     //TODO rethink
@@ -51,7 +54,7 @@ public class ScoreboardItemTimed extends ScoreboardItem{
             str += s.color + s.string;
         }
 
-        return str + this.time;
+        return str + this.time + " s";
     }
 
     public int getTime() {
@@ -68,5 +71,9 @@ public class ScoreboardItemTimed extends ScoreboardItem{
 
     public void setFinalId(int finalId) {
         this.finalId = finalId;
+    }
+
+    public void addOnTimeOut(IActionOnTimeOut iActionOnTimeOut) {
+        this.onTimeOut = iActionOnTimeOut;
     }
 }

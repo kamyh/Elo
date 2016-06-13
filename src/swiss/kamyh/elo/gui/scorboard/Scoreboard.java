@@ -1,6 +1,7 @@
 package swiss.kamyh.elo.gui.scorboard;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
@@ -15,11 +16,9 @@ import java.util.Iterator;
  * TODO TEST
  */
 public class Scoreboard {
-    public static int NumberOfLine = 13;
     private String objectiveName;
 
     protected ScoreboardManager sbManager;
-
 
     protected org.bukkit.scoreboard.Scoreboard scoreBoard;
     private ArrayList<ScoreboardItem> items;
@@ -27,6 +26,9 @@ public class Scoreboard {
 
     private String name;
     private ArrayList<Player> players;
+    private ScoreboardItem killTeam_1;
+    private ScoreboardItem killTeam_2;
+    private Object teamsKill;
 
     public Scoreboard(ArrayList<Player> players, String name) {
         this.name = name;
@@ -35,6 +37,20 @@ public class Scoreboard {
         this.items = new ArrayList<>();
 
         this.init();
+    }
+
+    public void initDisplayKill(String m1, String m2)
+    {
+        this.killTeam_1 = new ScoreboardItem(this,new CustomMessage[]{new CustomMessage(ChatColor.GOLD, m1)}, 7);
+        this.killTeam_2 = new ScoreboardItem(this,new CustomMessage[]{new CustomMessage(ChatColor.GOLD, m2)}, 6);
+        this.add(this.killTeam_1);
+        this.add(this.killTeam_2);
+    }
+
+    public void displayKills(String m1, String m2) {
+        this.killTeam_1.setMessage(new CustomMessage[]{new CustomMessage(ChatColor.GOLD, m1)});
+        this.killTeam_2.setMessage(new CustomMessage[]{new CustomMessage(ChatColor.GOLD, m2)});
+        this.update();
     }
 
     public void init() {
@@ -63,7 +79,7 @@ public class Scoreboard {
         //TODO Throw error ???
     }
 
-    protected void update() {
+    public void update() {
         scoreBoard = sbManager.getNewScoreboard();
         obj = scoreBoard.registerNewObjective("ScoreBoard", this.objectiveName);
 
@@ -91,11 +107,13 @@ public class Scoreboard {
 
     public void removeItemAt(int i) {
         Iterator it = this.items.iterator();
+        ScoreboardItem toRemove = null;
         for (ScoreboardItem scoreboardItem : this.items) {
             if (scoreboardItem.getLine() == i) {
-                this.items.remove(scoreboardItem);
+                toRemove = scoreboardItem;
             }
         }
+        this.items.remove(toRemove);
     }
 
     public ScoreboardItem getItemAtLine(int i) {
@@ -117,5 +135,9 @@ public class Scoreboard {
 
     public org.bukkit.scoreboard.Scoreboard getScoreBoard() {
         return scoreBoard;
+    }
+
+    public Object getTeamsKill() {
+        return teamsKill;
     }
 }

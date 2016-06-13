@@ -61,4 +61,5 @@ public class ScoreboardItem {
         hash = 17 * hash + (this.line != -1 ? this.line : 0);
         return hash;
     }
+
 }

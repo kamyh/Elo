@@ -9,7 +9,7 @@ import swiss.kamyh.elo.enumerate.ScenarioEnum;
  */
 public class Gladiator extends Scenario implements IScenario{
     public Gladiator() {
-        super(ScenarioEnum.BRAIN_FUCK_TELEPORTATION);
+        super(ScenarioEnum.GLADIATOR);
     }
 
     @Override

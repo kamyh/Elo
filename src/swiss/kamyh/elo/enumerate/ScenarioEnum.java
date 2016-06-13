@@ -11,5 +11,6 @@ public enum ScenarioEnum {
     GLADIATOR,
     HOLYDAY_ON_ICE,
     MAGIC_PONEY,
+    TRON,
     WALKING_DEAD
 }

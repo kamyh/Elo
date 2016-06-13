@@ -39,6 +39,7 @@ public class Party {
     private List<Player> team;
     private Player sender;
     private InventoryHolder player;
+    private Arena arena;
 
     /**
      * override Methods
@@ -129,7 +130,7 @@ public class Party {
                     if (clickType == ClickType.LEFT) {
                         System.out.println(Elo.getInstance().getQueue().toString());
 
-                        Arena arena = new Arena(participants);
+                        Party.this.arena = new Arena(participants);
                     }
                 }
             });
@@ -140,5 +141,9 @@ public class Party {
 
     public InventoryHolder getPlayer() {
         return sender;
+    }
+
+    public Arena getArena() {
+        return arena;
     }
 }
